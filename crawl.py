@@ -3,6 +3,7 @@ import random
 import requests
 import time
 import json
+import re
 
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -94,9 +95,13 @@ if __name__ == "__main__":
     with open(path_problem_lists, "r") as f:
         all_problem_lists = json.load(f)
     for problem_desc in tqdm(all_problem_lists):
+        title = re.sub(r'[^\w\s]', '', problem_desc["titleKo"])
         problem_id = problem_desc["problemId"]
+        path_save = os.path.join(dir_save, f"{title}_{problem_id}.txt")
+        if os.path.exists(path_save):
+            continue
+        
         problem_content = crawl_problem_content(problem_id)
-        title = problem_desc["titleKo"]
-        with open(os.path.join(dir_save, f"{title}.txt"), "w") as f:
+        with open(path_save, "w") as f:
             f.write(problem_content)
         time.sleep(second_wait_webpage)
