@@ -101,7 +101,10 @@ if __name__ == "__main__":
         if os.path.exists(path_save):
             continue
         
-        problem_content = crawl_problem_content(problem_id)
-        with open(path_save, "w") as f:
-            f.write(problem_content)
+        try:
+            problem_content = crawl_problem_content(problem_id)
+            with open(path_save, "w") as f:
+                f.write(problem_content)
+        except:
+            pass        
         time.sleep(second_wait_webpage)
