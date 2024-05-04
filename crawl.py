@@ -94,7 +94,7 @@ def crawl_problem_content(problem_id: int):
 if __name__ == "__main__":
     path_problem_lists = "problem_lists.json"
     second_wait_api = 1
-    second_wait_webpage = 5
+    second_wait_webpage = 2
 
     # # save problem lists to single json file
     # all_problem_lists = []
