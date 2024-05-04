@@ -96,14 +96,14 @@ if __name__ == "__main__":
     second_wait_api = 1
     second_wait_webpage = 2
 
-    # # save problem lists to single json file
-    # all_problem_lists = []
-    # for page in tqdm(range(1, 603)):
-    #     problem_lists = crawl_problem_list(page)
-    #     all_problem_lists.extend(problem_lists)
-    #     time.sleep(second_wait_api)
-    # with open(path_problem_lists, "w", encoding='utf8') as f:
-    #     json.dump(all_problem_lists, f, indent="\t", ensure_ascii=False)
+    # save problem lists to single json file
+    all_problem_lists = []
+    for page in tqdm(range(1, 603)):
+        problem_lists = crawl_problem_list(page)
+        all_problem_lists.extend(problem_lists)
+        time.sleep(second_wait_api)
+    with open(path_problem_lists, "w", encoding='utf8') as f:
+        json.dump(all_problem_lists, f, indent="\t", ensure_ascii=False)
 
     # save problems to files
     dir_save = "problems"
@@ -111,9 +111,8 @@ if __name__ == "__main__":
     with open(path_problem_lists, "r") as f:
         all_problem_lists = json.load(f)
     for problem_desc in tqdm(all_problem_lists):
-        title = re.sub(r"[^\w\s]", "", problem_desc["titleKo"])
         problem_id = problem_desc["problemId"]
-        path_save = os.path.join(dir_save, f"{title}_{problem_id}.txt")
+        path_save = os.path.join(dir_save, f"{problem_id}.txt")
         if os.path.exists(path_save):
             continue
 
