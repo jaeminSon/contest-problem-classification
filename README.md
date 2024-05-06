@@ -32,6 +32,6 @@ $ python compute_embeddings.py --homedir english_problems_desc_only_deduplicate 
 
 ### Analysis
 ```
-# plot difficulty of english problem
-$ python plot_difficulty.py
+# plot misc results
+$ python plot.py
 ```
