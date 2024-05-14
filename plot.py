@@ -113,7 +113,8 @@ if __name__ == "__main__":
     # draw_algo_tags(problem_list)
 
     problemid2algo = get_problemid2algo(problem_list)
-    draw_tsne("GPT4AllEmbeddings", problemid2algo)
-    draw_tsne("HuggingFaceEmbeddings", problemid2algo)
-    draw_tsne("HuggingFaceBgeEmbeddings", problemid2algo)
-    draw_tsne("HuggingFaceInstructEmbeddings", problemid2algo)
+    draw_tsne("ClassifierEmbeddings", problemid2algo)
+    # draw_tsne("GPT4AllEmbeddings", problemid2algo)
+    # draw_tsne("HuggingFaceEmbeddings", problemid2algo)
+    # draw_tsne("HuggingFaceBgeEmbeddings", problemid2algo)
+    # draw_tsne("HuggingFaceInstructEmbeddings", problemid2algo)
