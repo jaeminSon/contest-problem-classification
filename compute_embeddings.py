@@ -1,4 +1,5 @@
 import os
+import json
 import argparse
 import glob
 from typing import List
@@ -99,6 +100,42 @@ def extract_embedding_from_classifier(homedir: str):
     return paths_txtfiles, features
 
 
+def onehot_category(homedir: str, path_problem_lists: str):
+    algorithm_tag = set(['mathematics', 'implementation',
+                        'dynamic programming', 'data structures', 'graph theory'])
+
+    problem_numbers = set([int(os.path.splitext(os.path.basename(f))[
+                          0]) for f in find_txt_files(homedir)])
+    problems = json.load(open(path_problem_lists))
+
+    tags = sorted(set(sum([p["tags"] for p in problems], [])))
+    tag2index = {tags[i]: i for i in range(len(tags))}
+
+    paths_txtfiles = []
+    features = []
+    for prob in problems:
+        if prob["problemId"] in problem_numbers:
+            feature = np.zeros(len(tags))
+            for tag in prob["tags"]:
+                if tag not in algorithm_tag:
+                    feature[tag2index[tag]] = 1
+
+            paths_txtfiles.append(os.path.join(
+                homedir, str(prob['problemId'])+".txt"))
+            features.append(feature)
+
+    return paths_txtfiles, features
+
+
+def save_np(savedir, fpaths, embedding_vectors):
+    os.makedirs(savedir, exist_ok=True)
+    for fpath, arr_embed_vector in zip(fpaths, embedding_vectors):
+        assert len(arr_embed_vector.shape) == 1
+        path_save = os.path.join(savedir,
+                                 os.path.splitext(os.path.basename(fpath))[0])
+        np.save(path_save, arr_embed_vector)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--homedir')
@@ -111,13 +148,14 @@ if __name__ == "__main__":
     if args.embedding == "classifier":
 
         fpaths, embedding_vectors = extract_embedding_from_classifier(homedir)
+        save_np(savedir, fpaths, embedding_vectors)
 
-        os.makedirs(savedir, exist_ok=True)
-        for fpath, arr_embed_vector in zip(fpaths, embedding_vectors):
-            assert len(arr_embed_vector.shape) == 1
-            path_save = os.path.join(savedir,
-                                     os.path.splitext(os.path.basename(fpath))[0])
-            np.save(path_save, arr_embed_vector)
+    elif args.embedding == "category":
+        path_problem_lists = "problem_lists.json"
+        fpaths, embedding_vectors = onehot_category(
+            homedir, path_problem_lists)
+
+        save_np(savedir, fpaths, embedding_vectors)
 
     else:
         embeddings = get_embedding_object(args.embedding)
